@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="popup.css">
-    </head>
-    <body>
-        <div class="button-wrapper"> 
-            <button id="summarize-button">Summarize</button>
-          </div>
-        <div id="summaryDiv"> </div>
-        <script type="text/javascript" src="popup.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="button-wrapper"> 
+        <button id="nlp-summarize-button">NLP Summarize</button>
+        <button id="lsa-summarize-button">LSA Summarize</button>
+    </div>
+    <div id="spinner" class="spinner-border" style="display: none;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>      
+    <div id="summaryDiv"></div>
+    <script type="text/javascript" src="popup.js"></script>
+</body>
 </html>
