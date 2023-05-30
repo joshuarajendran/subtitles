@@ -7,13 +7,22 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 function generateSummary(url) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var summary = xhr.responseText;
-            chrome.runtime.sendMessage({ action: 'result', summary: summary });
-        }
-    };
-    xhr.open('GET', url, true);
-    xhr.send();
+    chrome.storage.local.get(['minLength', 'maxLength'], function(options) {
+        var minLength = options.minLength || 120;  // use default value if not set
+        var maxLength = options.maxLength || 160;  // use default value if not set
+
+        // Modify the url to include the options
+        url += '&min_length=' + minLength + '&max_length=' + maxLength;
+        
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var summary = xhr.responseText;
+                chrome.runtime.sendMessage({ action: 'result', summary: summary });
+            }
+        };
+        xhr.open('GET', url, true);
+        xhr.send();
+    });
 }
+

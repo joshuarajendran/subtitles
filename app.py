@@ -11,15 +11,19 @@ app = Flask(__name__)
 CORS(app)  # chrome auto blocks client side
 
 @app.route('/api/summarize', methods=['GET'])
+@app.route('/api/summarize', methods=['GET'])
 def get_nlp_summary():
     try:
         youtube_url = request.args.get('youtube_url')
+        min_length = int(request.args.get('min_length', 120))
+        max_length = int(request.args.get('max_length', 160))
         video_id = extract_video_id(youtube_url)
         transcript_text = get_transcript(video_id)
-        summary_text = summarize_nlp(transcript_text)
+        summary_text = summarize_nlp(transcript_text, min_length, max_length)
         return summary_text, 200
     except Exception as e:
         return str(e), 500
+
 
 @app.route('/api/summarize-lsa', methods=['GET'])
 def get_lsa_summary():
@@ -46,11 +50,11 @@ def get_transcript(video_id):
     transcript_text = " ".join([dict['text'] for dict in transcript])
     return transcript_text
 
-def summarize_nlp(transcript_text):
+def summarize_nlp(transcript_text, min_length, max_length):
     tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
     model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
     input_ids = tokenizer.encode(transcript_text, return_tensors='pt')
-    summary_ids = model.generate(input_ids, max_length=160, min_length=120, length_penalty=2.0, num_beams=4, early_stopping=True)
+    summary_ids = model.generate(input_ids, max_length=max_length, min_length=min_length, length_penalty=2.0, num_beams=4, early_stopping=True)
     summary_text = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary_text
 
