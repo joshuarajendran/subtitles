@@ -11,7 +11,6 @@ app = Flask(__name__)
 CORS(app)  # chrome auto blocks client side
 
 @app.route('/api/summarize', methods=['GET'])
-@app.route('/api/summarize', methods=['GET'])
 def get_nlp_summary():
     try:
         youtube_url = request.args.get('youtube_url')
